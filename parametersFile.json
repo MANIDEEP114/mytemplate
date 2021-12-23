@@ -1,0 +1,117 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "serverName": {
+      "value": "pgsql123663"
+    },
+    "administratorLogin": {
+      "value": "Manideep"
+    },
+    "administratorLoginPassword": {
+      "value": "Kavitha123@#$"
+    },
+    "skuCapacity": {
+      "value": 2
+    },
+    "skuName": {
+      "value": "GP_Gen5_2"
+    },
+    "skuSizeMB": {
+      "value": 51200
+    },
+    "skuTier": {
+      "value": "GeneralPurpose"
+    },
+    "skuFamily": {
+      "value": "Gen5"
+    },
+    "postgresqlVersion": {
+      "value": "11"
+    },
+    "location": {
+      "value": "[resourceGroup().location]"
+    },
+    "backupRetentionDays": {
+      "value": 7
+    },
+    "geoRedundantBackup": {
+      "value": "Disabled"
+    },
+    "virtualNetworkName": {
+      "value": "azure_postgresql_vnet"
+    },
+    "subnetName": {
+      "value": "azure_postgresql_subnet"
+    },
+    "virtualNetworkRuleName": {
+      "value": "AllowSubnet"
+    },
+    "vnetAddressPrefix": {
+      "value": "10.0.0.0/16"
+    },
+    "subnetPrefix": {
+      "value": "10.0.0.0/16"
+    },
+    "qmigstorageType": {
+      "value": "Standard_LRS"
+    },
+    "server1Name": {
+      "value": "instance1"
+    },
+    "server1AdminUserName": {
+      "value": "naresh"
+    },
+    "server1AdminPassword": {
+      "value": "kavitha123@#$"
+    },
+    "server1UbuntuOSVersion": {
+      "value": "14.04.2-LTS"
+    },
+    "server2Name": {
+      "value": "instance2"
+    },
+    "server2AdminUserName": {
+      "value": "mintu"
+    },
+    "server2AdminPassword": {
+      "value": "kavitha123@#$"
+    },
+    "server2UbuntuOSVersion": {
+      "value": "14.04.2-LTS"
+    },
+    "server3Name": {
+      "value": "instance3"
+    },
+    "server3AdminUserName": {
+      "value": "ram"
+    },
+    "server3AdminPassword": {
+      "value": "kavitha123@#$"
+    },
+    "server3UbuntuOSVersion": {
+      "value": "14.04.2-LTS"
+    },
+    "server4Name": {
+      "value": "instance4"
+    },
+    "server4AdminUserName": {
+      "value": "ravi"
+    },
+    "server4AdminPassword": {
+      "value": "kavitha123@#$"
+    },
+    "server4UbuntuOSVersion": {
+      "value": "14.04.2-LTS"
+    },
+    "qmigappName": {
+      "value": "wbapi"
+    },
+    "qmigappSKU": {
+      "value": "Free"
+    },
+    "qmigappWorkerSize": {
+      "value": "0"
+    }
+  }
+}

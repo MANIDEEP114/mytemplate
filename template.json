@@ -1,0 +1,754 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+        "_generator": {
+            "name": "bicep",
+            "version": "0.4.1008.15138",
+            "templateHash": "10672848046880842986"
+        }
+    },
+    "parameters": {
+        "serverName": {
+            "type": "string",
+            "metadata": {
+                "description": "Server Name for Azure database for PostgreSQL"
+            }
+        },
+        "administratorLogin": {
+            "type": "string",
+            "minLength": 1,
+            "metadata": {
+                "description": "Database administrator login name"
+            }
+        },
+        "administratorLoginPassword": {
+            "type": "secureString",
+            "minLength": 8,
+            "metadata": {
+                "description": "Database administrator password"
+            }
+        },
+        "skuCapacity": {
+            "type": "int",
+            "defaultValue": 2,
+            "metadata": {
+                "description": "Azure database for PostgreSQL compute capacity in vCores (2,4,8,16,32)"
+            }
+        },
+        "skuName": {
+            "type": "string",
+            "defaultValue": "GP_Gen5_2",
+            "metadata": {
+                "description": "Azure database for PostgreSQL sku name "
+            }
+        },
+        "skuSizeMB": {
+            "type": "int",
+            "defaultValue": 51200,
+            "metadata": {
+                "description": "Azure database for PostgreSQL Sku Size "
+            }
+        },
+        "skuTier": {
+            "type": "string",
+            "defaultValue": "GeneralPurpose",
+            "allowedValues": [
+                "Basic",
+                "GeneralPurpose",
+                "MemoryOptimized"
+            ],
+            "metadata": {
+                "description": "Azure database for PostgreSQL pricing tier"
+            }
+        },
+        "skuFamily": {
+            "type": "string",
+            "defaultValue": "Gen5",
+            "metadata": {
+                "description": "Azure database for PostgreSQL sku family"
+            }
+        },
+        "postgresqlVersion": {
+            "type": "string",
+            "defaultValue": "11",
+            "allowedValues": [
+                "9.5",
+                "9.6",
+                "10",
+                "10.0",
+                "10.2",
+                "11"
+            ],
+            "metadata": {
+                "description": "PostgreSQL version"
+            }
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        },
+        "backupRetentionDays": {
+            "type": "int",
+            "defaultValue": 7,
+            "metadata": {
+                "description": "PostgreSQL Server backup retention days"
+            }
+        },
+        "geoRedundantBackup": {
+            "type": "string",
+            "defaultValue": "Disabled",
+            "metadata": {
+                "description": "Geo-Redundant Backup setting"
+            }
+        },
+        "virtualNetworkName": {
+            "type": "string",
+            "defaultValue": "azure_postgresql_vnet",
+            "metadata": {
+                "description": "Virtual Network Name"
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "defaultValue": "azure_postgresql_subnet",
+            "metadata": {
+                "description": "Subnet Name"
+            }
+        },
+        "virtualNetworkRuleName": {
+            "type": "string",
+            "defaultValue": "AllowSubnet",
+            "metadata": {
+                "description": "Virtual Network RuleName"
+            }
+        },
+        "vnetAddressPrefix": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/16",
+            "metadata": {
+                "description": "Virtual Network Address Prefix"
+            }
+        },
+        "subnetPrefix": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/16",
+            "metadata": {
+                "description": "Subnet Address Prefix"
+            }
+        },
+        "qmigstorageType": {
+            "type": "string",
+            "defaultValue": "Standard_LRS",
+            "allowedValues": [
+                "Standard_LRS",
+                "Standard_ZRS",
+                "Standard_GRS",
+                "Standard_RAGRS",
+                "Premium_LRS"
+            ]
+        },
+        "server1Name": {
+            "type": "string",
+            "minLength": 1
+        },
+        "server1AdminUserName": {
+            "type": "string",
+            "minLength": 1
+        },
+        "server1AdminPassword": {
+            "type": "securestring"
+        },
+        "server1UbuntuOSVersion": {
+            "type": "string",
+            "defaultValue": "14.04.2-LTS",
+            "allowedValues": [
+                "12.04.5-LTS",
+                "14.04.2-LTS",
+                "15.04"
+            ]
+        },
+        "server2Name": {
+            "type": "string",
+            "minLength": 1
+        },
+        "server2AdminUserName": {
+            "type": "string",
+            "minLength": 1
+        },
+        "server2AdminPassword": {
+            "type": "securestring"
+        },
+        "server2UbuntuOSVersion": {
+            "type": "string",
+            "defaultValue": "14.04.2-LTS",
+            "allowedValues": [
+                "12.04.5-LTS",
+                "14.04.2-LTS",
+                "15.04"
+            ]
+        },
+        "server3Name": {
+            "type": "string",
+            "minLength": 1
+        },
+        "server3AdminUserName": {
+            "type": "string",
+            "minLength": 1
+        },
+        "server3AdminPassword": {
+            "type": "securestring"
+        },
+        "server3UbuntuOSVersion": {
+            "type": "string",
+            "defaultValue": "14.04.2-LTS",
+            "allowedValues": [
+                "12.04.5-LTS",
+                "14.04.2-LTS",
+                "15.04"
+            ]
+        },
+        "server4Name": {
+            "type": "string",
+            "minLength": 1
+        },
+        "server4AdminUserName": {
+            "type": "string",
+            "minLength": 1
+        },
+        "server4AdminPassword": {
+            "type": "securestring"
+        },
+        "server4UbuntuOSVersion": {
+            "type": "string",
+            "defaultValue": "14.04.2-LTS",
+            "allowedValues": [
+                "12.04.5-LTS",
+                "14.04.2-LTS",
+                "15.04"
+            ]
+        },
+        "qmigappName": {
+            "type": "string",
+            "minLength": 1
+        },
+        "qmigappSKU": {
+            "type": "string",
+            "allowedValues": [
+                "Free",
+                "Shared",
+                "Basic",
+                "Standard"
+            ],
+            "defaultValue": "Free"
+        },
+        "qmigappWorkerSize": {
+            "type": "string",
+            "allowedValues": [
+                "0",
+                "1",
+                "2"
+            ],
+            "defaultValue": "0"
+        }
+    },
+    "functions": [],
+    "variables": {
+        "firewallrules": [
+            {
+                "Name": "rule1",
+                "StartIpAddress": "0.0.0.0",
+                "EndIpAddress": "255.255.255.255"
+            },
+            {
+                "Name": "rule2",
+                "StartIpAddress": "0.0.0.0",
+                "EndIpAddress": "255.255.255.255"
+            }
+        ],
+        "vnetvmPrefix": "192.0.0.0/16",
+        "vnetvmSubnet1Name": "Subnet-1",
+        "vnetvmSubnet1Prefix": "192.0.3.0/24",
+        "vnetvmSubnet2Name": "Subnet-2",
+        "vnetvmSubnet2Prefix": "192.0.8.0/24",
+        "qmigstorageName": "[concat('qmigstorage', uniqueString(resourceGroup().id))]",
+        "server1ImagePublisher": "Canonical",
+        "server1ImageOffer": "UbuntuServer",
+        "server1OSDiskName": "server1OSDisk",
+        "server1VmSize": "Standard_D1",
+        "server1VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'vnetvm')]",
+        "server1SubnetRef": "[concat(variables('server1VnetID'), '/subnets/', variables('vnetvmSubnet1Name'))]",
+        "server1StorageAccountContainerName": "vhds",
+        "server1NicName": "[concat(parameters('server1Name'), 'NetworkInterface')]",
+        "server2ImagePublisher": "Canonical",
+        "server2ImageOffer": "UbuntuServer",
+        "server2OSDiskName": "server2OSDisk",
+        "server2VmSize": "Standard_D1",
+        "server2VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'vnetvm')]",
+        "server2SubnetRef": "[concat(variables('server2VnetID'), '/subnets/', variables('vnetvmSubnet1Name'))]",
+        "server2StorageAccountContainerName": "vhds",
+        "server2NicName": "[concat(parameters('server2Name'), 'NetworkInterface')]",
+        "server3ImagePublisher": "Canonical",
+        "server3ImageOffer": "UbuntuServer",
+        "server3OSDiskName": "server3OSDisk",
+        "server3VmSize": "Standard_D1",
+        "server3VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'vnetvm')]",
+        "server3SubnetRef": "[concat(variables('server3VnetID'), '/subnets/', variables('vnetvmSubnet1Name'))]",
+        "server3StorageAccountContainerName": "vhds",
+        "server3NicName": "[concat(parameters('server3Name'), 'NetworkInterface')]",
+        "server4ImagePublisher": "Canonical",
+        "server4ImageOffer": "UbuntuServer",
+        "server4OSDiskName": "server4OSDisk",
+        "server4VmSize": "Standard_D1",
+        "server4VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'vnetvm')]",
+        "server4SubnetRef": "[concat(variables('server4VnetID'), '/subnets/', variables('vnetvmSubnet1Name'))]",
+        "server4StorageAccountContainerName": "vhds",
+        "server4NicName": "[concat(parameters('server4Name'), 'NetworkInterface')]",
+        "qmigwebName": "[concat('qmigweb', uniqueString(resourceGroup().id))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.DBforPostgreSQL/servers/virtualNetworkRules",
+            "apiVersion": "2017-12-01",
+            "name": "[format('{0}/{1}', parameters('serverName'), parameters('virtualNetworkRuleName'))]",
+            "properties": {
+                "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]",
+                "ignoreMissingVnetServiceEndpoint": true
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.DBforPostgreSQL/servers', parameters('serverName'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-06-01",
+            "name": "[parameters('virtualNetworkName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('vnetAddressPrefix')]"
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2020-06-01",
+            "name": "[format('{0}/{1}', parameters('virtualNetworkName'), parameters('subnetName'))]",
+            "properties": {
+                "addressPrefix": "[parameters('subnetPrefix')]"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.DBforPostgreSQL/servers",
+            "apiVersion": "2017-12-01",
+            "name": "[parameters('serverName')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "[parameters('skuName')]",
+                "tier": "[parameters('skuTier')]",
+                "capacity": "[parameters('skuCapacity')]",
+                "size": "[format('{0}', parameters('skuSizeMB'))]",
+                "family": "[parameters('skuFamily')]"
+            },
+            "properties": {
+                "createMode": "Default",
+                "version": "[parameters('postgresqlVersion')]",
+                "administratorLogin": "[parameters('administratorLogin')]",
+                "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+                "storageProfile": {
+                    "storageMB": "[parameters('skuSizeMB')]",
+                    "backupRetentionDays": "[parameters('backupRetentionDays')]",
+                    "geoRedundantBackup": "[parameters('geoRedundantBackup')]"
+                }
+            }
+        },
+        {
+            "copy": {
+                "name": "firewallRules",
+                "count": "[length(variables('firewallrules'))]",
+                "mode": "serial",
+                "batchSize": 1
+            },
+            "type": "Microsoft.DBforPostgreSQL/servers/firewallRules",
+            "apiVersion": "2017-12-01",
+            "name": "[format('{0}/{1}', parameters('serverName'), variables('firewallrules')[copyIndex()].Name)]",
+            "properties": {
+                "startIpAddress": "[variables('firewallrules')[copyIndex()].StartIpAddress]",
+                "endIpAddress": "[variables('firewallrules')[copyIndex()].EndIpAddress]"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.DBforPostgreSQL/servers', parameters('serverName'))]"
+            ]
+        },
+        {
+            "name": "vnetvm",
+            "type": "Microsoft.Network/virtualNetworks",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [],
+            "tags": {
+                "displayName": "vnetvm"
+            },
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[variables('vnetvmPrefix')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[variables('vnetvmSubnet1Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables('vnetvmSubnet1Prefix')]"
+                        }
+                    },
+                    {
+                        "name": "[variables('vnetvmSubnet2Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables('vnetvmSubnet2Prefix')]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[variables('qmigstorageName')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [],
+            "tags": {
+                "displayName": "qmigstorage"
+            },
+            "properties": {
+                "accountType": "[parameters('qmigstorageType')]"
+            }
+        },
+        {
+            "name": "[variables('server1NicName')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [
+                "[concat('Microsoft.Network/virtualNetworks/', 'vnetvm')]"
+            ],
+            "tags": {
+                "displayName": "server1Nic"
+            },
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[variables('server1SubnetRef')]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[parameters('server1Name')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [
+                "[concat('Microsoft.Storage/storageAccounts/', variables('qmigstorageName'))]",
+                "[concat('Microsoft.Network/networkInterfaces/', variables('server1NicName'))]"
+            ],
+            "tags": {
+                "displayName": "server1"
+            },
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[variables('server1VmSize')]"
+                },
+                "osProfile": {
+                    "computerName": "[parameters('server1Name')]",
+                    "adminUsername": "[parameters('server1AdminUsername')]",
+                    "adminPassword": "[parameters('server1AdminPassword')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "[variables('server1ImagePublisher')]",
+                        "offer": "[variables('server1ImageOffer')]",
+                        "sku": "[parameters('server1UbuntuOSVersion')]",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "name": "server1OSDisk",
+                        "vhd": {
+                            "uri": "[concat('http://', variables('qmigstorageName'), '.blob.core.windows.net/', variables('server1StorageAccountContainerName'), '/', variables('server1OSDiskName'), '.vhd')]"
+                        },
+                        "caching": "ReadWrite",
+                        "createOption": "FromImage"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('server1NicName'))]"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "[variables('server2NicName')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [
+                "[concat('Microsoft.Network/virtualNetworks/', 'vnetvm')]"
+            ],
+            "tags": {
+                "displayName": "server2Nic"
+            },
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[variables('server2SubnetRef')]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[parameters('server2Name')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [
+                "[concat('Microsoft.Storage/storageAccounts/', variables('qmigstorageName'))]",
+                "[concat('Microsoft.Network/networkInterfaces/', variables('server2NicName'))]"
+            ],
+            "tags": {
+                "displayName": "server2"
+            },
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[variables('server2VmSize')]"
+                },
+                "osProfile": {
+                    "computerName": "[parameters('server2Name')]",
+                    "adminUsername": "[parameters('server2AdminUsername')]",
+                    "adminPassword": "[parameters('server2AdminPassword')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "[variables('server2ImagePublisher')]",
+                        "offer": "[variables('server2ImageOffer')]",
+                        "sku": "[parameters('server2UbuntuOSVersion')]",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "name": "server2OSDisk",
+                        "vhd": {
+                            "uri": "[concat('http://', variables('qmigstorageName'), '.blob.core.windows.net/', variables('server2StorageAccountContainerName'), '/', variables('server2OSDiskName'), '.vhd')]"
+                        },
+                        "caching": "ReadWrite",
+                        "createOption": "FromImage"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('server2NicName'))]"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "[variables('server3NicName')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [
+                "[concat('Microsoft.Network/virtualNetworks/', 'vnetvm')]"
+            ],
+            "tags": {
+                "displayName": "server3Nic"
+            },
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[variables('server3SubnetRef')]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[parameters('server3Name')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [
+                "[concat('Microsoft.Storage/storageAccounts/', variables('qmigstorageName'))]",
+                "[concat('Microsoft.Network/networkInterfaces/', variables('server3NicName'))]"
+            ],
+            "tags": {
+                "displayName": "server3"
+            },
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[variables('server3VmSize')]"
+                },
+                "osProfile": {
+                    "computerName": "[parameters('server3Name')]",
+                    "adminUsername": "[parameters('server3AdminUsername')]",
+                    "adminPassword": "[parameters('server3AdminPassword')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "[variables('server3ImagePublisher')]",
+                        "offer": "[variables('server3ImageOffer')]",
+                        "sku": "[parameters('server3UbuntuOSVersion')]",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "name": "server3OSDisk",
+                        "vhd": {
+                            "uri": "[concat('http://', variables('qmigstorageName'), '.blob.core.windows.net/', variables('server3StorageAccountContainerName'), '/', variables('server3OSDiskName'), '.vhd')]"
+                        },
+                        "caching": "ReadWrite",
+                        "createOption": "FromImage"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('server3NicName'))]"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "[variables('server4NicName')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [
+                "[concat('Microsoft.Network/virtualNetworks/', 'vnetvm')]"
+            ],
+            "tags": {
+                "displayName": "server4Nic"
+            },
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[variables('server4SubnetRef')]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[parameters('server4Name')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [
+                "[concat('Microsoft.Storage/storageAccounts/', variables('qmigstorageName'))]",
+                "[concat('Microsoft.Network/networkInterfaces/', variables('server4NicName'))]"
+            ],
+            "tags": {
+                "displayName": "server4"
+            },
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[variables('server4VmSize')]"
+                },
+                "osProfile": {
+                    "computerName": "[parameters('server4Name')]",
+                    "adminUsername": "[parameters('server4AdminUsername')]",
+                    "adminPassword": "[parameters('server4AdminPassword')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "[variables('server4ImagePublisher')]",
+                        "offer": "[variables('server4ImageOffer')]",
+                        "sku": "[parameters('server4UbuntuOSVersion')]",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "name": "server4OSDisk",
+                        "vhd": {
+                            "uri": "[concat('http://', variables('qmigstorageName'), '.blob.core.windows.net/', variables('server4StorageAccountContainerName'), '/', variables('server4OSDiskName'), '.vhd')]"
+                        },
+                        "caching": "ReadWrite",
+                        "createOption": "FromImage"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('server4NicName'))]"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "[parameters('qmigappName')]",
+            "type": "Microsoft.Web/serverfarms",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2014-06-01",
+            "dependsOn": [],
+            "tags": {
+                "displayName": "qmigapp"
+            },
+            "properties": {
+                "name": "[parameters('qmigappName')]",
+                "sku": "[parameters('qmigappSKU')]",
+                "workerSize": "[parameters('qmigappWorkerSize')]",
+                "numberOfWorkers": 1
+            }
+        },
+        {
+            "name": "[variables('qmigwebName')]",
+            "type": "Microsoft.Web/sites",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-08-01",
+            "dependsOn": [
+                "[concat('Microsoft.Web/serverfarms/', parameters('qmigappName'))]"
+            ],
+            "tags": {
+                "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('qmigappName'))]": "Resource",
+                "displayName": "qmigweb"
+            },
+            "properties": {
+                "name": "[variables('qmigwebName')]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms/', parameters('qmigappName'))]"
+            }
+        }
+    ]
+}
